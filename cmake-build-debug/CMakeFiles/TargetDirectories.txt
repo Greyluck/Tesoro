@@ -1,0 +1,3 @@
+F:/Principal/Proyectos Git/Tesoro/cmake-build-debug/CMakeFiles/Tesoro.dir
+F:/Principal/Proyectos Git/Tesoro/cmake-build-debug/CMakeFiles/edit_cache.dir
+F:/Principal/Proyectos Git/Tesoro/cmake-build-debug/CMakeFiles/rebuild_cache.dir
