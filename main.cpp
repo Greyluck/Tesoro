@@ -1,7 +1,7 @@
 // Liberia usada para trabajar con funciones de entrada y salida
 #include <iostream>
-
-
+#include <fstream>
+#include <typeinfo>
 /** Crea un tablero (board) que sera usado para el juego.*/
 int** createBoard(int columns, int rows){
     // TODO: ver porque no funciona con int board[columns][rows];
@@ -22,11 +22,12 @@ int** createBoard(int columns, int rows){
         }
     }
     return board;
+
 }
 
 /** Muestra el tablero (board) que sera usado para el juego.*/
 void printBoard(int** board,int columns,int rows){
-    printf("TABLERO DE JUEGO: \n");
+    printf("                       TABLERO DE JUEGO: \n");
 
     // Lo que se agregue en esta seccion se imprimie una sola vez
     std::cout << "  |";
@@ -40,7 +41,7 @@ void printBoard(int** board,int columns,int rows){
     }
     std::cout << "\n";
 
-    // TODO: Por algun motivo la impresion del tablero se debe hacer opuesta a su creacion. Revisar luego.
+    // TODO: Por algun motivo la impresion del tablero se debe hacer opuesta a su creacion. (Revisar luego).
     for (int row = 0; row < rows; row++){
         // Lo que se agregue en esta seccion se imprimie en cada linea
         if (row < 10){
@@ -56,6 +57,7 @@ void printBoard(int** board,int columns,int rows){
         }
         printf("|\n");
     }
+    printf("\n");
 }
 
 /** Solicita al jugador ingresar una celda para colocar un unico tesoro*/
@@ -120,7 +122,7 @@ int ** removeChest(int** board,int player,int column, int row){
 /** Mueve los tesoros*/
 int** moveChest(int** board,int player,int column, int row){
     // Saca el cofre de la posicion que estaba.
-    removeChest(board,int player,int column, int row)
+    removeChest(board,player,column,row);
 
     // Solicita que ingreses donde moveras el tesoro
     placeChest(board,player);
@@ -160,7 +162,7 @@ int** placeTheSpy(int** board,int player){
     else {
         // Estoy sobre mi tesoro?
         if (board[column][row] == CHEST*player){ //Estoy sobre mi tesoro
-            board = moveChest(board,player);     // Debo mover mi tesoro.
+            board = moveChest(board,player,column,row);     // Debo mover mi tesoro.
             board[column][row]=EMPTY;
         }
     }
@@ -182,7 +184,7 @@ int** placeTheSpy(int** board,int player){
     // Sino movi mi tesoro, puedo moverlo ahora
     if (!chestMoved){
         //TODO: Ask the user to move the chest
-        board = moveChest(board,player);
+        board = moveChest(board,player,column,row);
     }
 
 
@@ -233,6 +235,7 @@ int main() {
      *  - el jugador mueve un tesoro.
      *  - se exporta su tablero para que lo vea al terminar.
      */
+
 
 }
 
