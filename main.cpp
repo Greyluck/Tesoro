@@ -67,14 +67,6 @@ int** placeChest(int** board,int player){
 
     // Le solicita al usuario ingresar la coordenada del cofre.
     int column, row;
-
-    int userInput;
-    std::cout << "Ingrese coordenada:\n";
-    std::cin >> userInput;
-    column = static_cast<int>(userInput/100);
-    row = userInput % 100;
-    std::cout << "Eligiste la columna "<< column <<" y la fila "<< row << " para esconder este tesoro.\n";
-
     std::cout << "Jugador "<< player <<", elige la columna donde colocaras el nuevo tesoro: \n";
     std::cin >> column;
     std::cout << "Elige la fila donde colocaras este tesoro: \n";
