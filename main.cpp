@@ -1,8 +1,6 @@
 // Liberia usada para trabajar con funciones de entrada y salida
 #include <iostream>
-#include <fstream>
-#include <typeinfo>
-#include <cmath>
+
 
 //------------------------------------------------------------------------------------------------------------
 // Esta seccion gestiona las constantes globales.
@@ -137,13 +135,52 @@ void printBoard(int** board,int columns,int rows){
     }
     printf("\n");
 }
+
+void updateBoard(int** board){
+    // Vacia el contador de cofres, para ir sumandolos a medida que aparescan
+    playerOneRemainingChests = 0;
+    playerTwoRemainingChests = 0;
+
+    // Recorre todas las celdas
+    for (int column = 0; column < COLUMNS ; column++) {
+        for (int row = 0; row < ROWS ; row++){
+            // Procede a cavar
+            if (0<board[column][row] && board[column][row]<6)
+                board[column][row]--;
+
+            // Si hay un cofre lo cuento
+            if (board[column][row]==CHEST){
+                playerOneRemainingChests++;
+            }
+            if (board[column][row]==-CHEST){
+                playerTwoRemainingChests++;
+            }
+            if (board[column][row]==CHESTS){
+                playerOneRemainingChests++;
+                playerTwoRemainingChests++;
+            }
+        }
+    }
+
+    if (playerOneRemainingChests <= 0){
+        std::cout << "Gano el jugador "<<PLAYER2NAME<<".\n";
+        victory = true;
+    } else {
+        if (playerTwoRemainingChests <= 0) {
+            std::cout << "Gano el jugador " << PLAYER1NAME << ".\n";
+            victory = true;
+        }
+    }
+}
+
+
 //------------------------------------------------------------------------------------------------------------
 
 
 
 
 //------------------------------------------------------------------------------------------------------------
-// Esta seccion se encarga de mover y colocar cofres.
+// Esta seccion se encarga de mover y colocar cofres y espias
 //------------------------------------------------------------------------------------------------------------
 /** Solicita al jugador ingresar una celda para colocar un unico tesoro*/
 int** placeChest(int** board,int player){
@@ -348,9 +385,27 @@ int** placeTheSpy(int** board,int player){
     return board;
 }
 
+//------------------------------------------------------------------------------------------------------------
+// Esta seccion se encarga exportar la info para archivos externos.
+//------------------------------------------------------------------------------------------------------------
 /** Exporta el tablero para que solo el jugador correspondiente vea los valores*/
-void exportBoard(){
+void exportBoard(int** board) {
+    //--------------------------------------------------------
+    FILE *masterFile;
+    masterFile = fopen("../Boards/ResultadoMaestros.csv", "w");
+    for (int column = 0; column < COLUMNS; column++) {
+        for (int row = 0; row < ROWS; row++)
+            fprintf(masterFile, "|%i", board[column][row]);
+        fprintf(masterFile, "|\n");
+    }
+    //--------------------------------------------------------
+    fclose(masterFile);
 }
+
+
+//------------------------------------------------------------------------------------------------------------
+// Esta seccion se encarga de manejar los turnos
+//------------------------------------------------------------------------------------------------------------
 
 /** Determina la sucesion de acciones que se realizan en un turno*/
 void playTheTurn(int** board,int player){
@@ -368,49 +423,20 @@ void playTheTurn(int** board,int player){
 
 }
 
-void updateBoard(int** board){
-    // Vacia el contador de cofres, para ir sumandolos a medida que aparescan
-    playerOneRemainingChests = 0;
-    playerTwoRemainingChests = 0;
-
-    // Recorre todas las celdas
-    for (int column = 0; column < COLUMNS ; column++) {
-        for (int row = 0; row < ROWS ; row++){
-            // Procede a cavar
-            if (0<board[column][row] && board[column][row]<6)
-                board[column][row]--;
-
-            // Si hay un cofre lo cuento
-            if (board[column][row]==CHEST){
-                playerOneRemainingChests++;
-            }
-            if (board[column][row]==-CHEST){
-                playerTwoRemainingChests++;
-            }
-            if (board[column][row]==CHESTS){
-                playerOneRemainingChests++;
-                playerTwoRemainingChests++;
-            }
-        }
-    }
-
-    if (playerOneRemainingChests <= 0){
-        std::cout << "Gano el jugador "<<PLAYER2NAME<<".\n";
-        victory = true;
-    } else {
-        if (playerTwoRemainingChests <= 0) {
-            std::cout << "Gano el jugador " << PLAYER1NAME << ".\n";
-            victory = true;
-        }
-    }
-}
-
+//------------------------------------------------------------------------------------------------------------
+// Esta seccion ejecuta el programa
+//------------------------------------------------------------------------------------------------------------
 int main() {
     // Determinan el bando del jugador. (Positivo si es blanco, negativo si es negro)
     int curentplayer = 1; // Comienza el blanco
 
-    // Crea el tablero que vamos a usar y lo muestra (No sera visible para jugadores)
+    // Crea el tablero que vamos a usar
     int **myBoard = createBoard(COLUMNS, ROWS);
+
+    // Create the file
+    exportBoard(myBoard);
+
+    // Muestra el tablero (No sera visible para jugadores)
     printBoard(myBoard, COLUMNS, ROWS);
 
     // Solicita a ambos usuarios que ingresen sus tesoros.
