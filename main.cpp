@@ -4,6 +4,10 @@
 #include <typeinfo>
 #include <cmath>
 
+//------------------------------------------------------------------------------------------------------------
+// Esta seccion gestiona las constantes globales.
+//------------------------------------------------------------------------------------------------------------
+
 
 //------------------------------------------------------------------------------------------------------------
 // Esta seccion se encarga del manejo de coordenadas.
@@ -18,7 +22,7 @@ Coordinate askForCoordinate(){
     float inputCoordinate;
     Coordinate myCordinate{};
     std::cout << "Ingrese la coordenada: \n";
-    std::cin >> inputCoordinate;
+    std::cin >> inputCoordinate; // TODO: Validacion el igreso de datos validos o volver a preguntar
     // Extrae el valor entero  (vertical)
     myCordinate.vertical = (int)inputCoordinate;
     // Extrae el valor decimal (horizontal)
@@ -29,10 +33,8 @@ Coordinate askForCoordinate(){
 //------------------------------------------------------------------------------------------------------------
 
 
-/** Crea un tablero (board) que sera usado para el juego.*/
+/** Crea un tablero (board) que sera usado para el juego. (Lo hace usando punteros)*/
 int** createBoard(int columns, int rows){
-    // TODO: ver porque no funciona con int board[columns][rows];
-
     // Crea el tablero que voy a usar (sus celdas no tienen info)
     int** board = 0;
 
@@ -49,7 +51,6 @@ int** createBoard(int columns, int rows){
         }
     }
     return board;
-
 }
 
 /** Muestra el tablero (board) que sera usado para el juego.*/
@@ -68,7 +69,7 @@ void printBoard(int** board,int columns,int rows){
     }
     std::cout << "\n";
 
-    // TODO: Por algun motivo la impresion del tablero se debe hacer opuesta a su creacion. (Revisar luego).
+    // TODO: Por algun motivo la impresion del tablero se debe hacer opuesta a su creacion.
     for (int row = 0; row < rows; row++){
         // Lo que se agregue en esta seccion se imprimie en cada linea
         if (row < 10){
@@ -102,12 +103,20 @@ int** placeChest(int** board,int player){
     }
 
     // Le solicita al usuario ingresar la coordenada del cofre.
+    /* Se lo comento para provar la version nueva
     int column, row;
-    std::cout << "Jugador "<< currentPlayer <<", elige la columna donde colocaras el nuevo tesoro: \n";
+    std::cout << "Jugador "<< currentPlayer <<", elige la cordenada donde colocaras el nuevo tesoro: \n";
     std::cin >> column;
     std::cout << "Elige la fila donde colocaras este tesoro: \n";
     std::cin >> row;
     std::cout << "Eligiste la columna "<< column <<" y la fila "<< row << " para esconder este tesoro.\n";
+    */
+
+    std::cout << "Jugador "<< currentPlayer <<", elige la cordenada donde colocaras el nuevo tesoro: \n";
+    Coordinate myCoordinate = askForCoordinate();
+    int column = myCoordinate.vertical;
+    int row    = myCoordinate.horizontal;
+
 
     // Si la celda esta vacia graba el cofre con el signo de su jugador
     if (board[column][row] == EMPTY){
@@ -119,6 +128,7 @@ int** placeChest(int** board,int player){
             board[column][row] = CHESTS; // Asigna el valor para "Cofres dobles"
         }
     }
+
     return board;
 }
 
@@ -236,10 +246,6 @@ void playTheTurn(int** board,int player){
     }
 
 int main() {
-    // Solicita coordinadas
-    Coordinate myCoordinate = askForCoordinate();
-    std::cout << myCoordinate.vertical << "|" << myCoordinate.horizontal<< "\n";
-
     // Determinan el bando del jugador. (Positivo si es blanco, negativo si es negro)
     int currentPlayer = 1; // Comienza el blanco
 
