@@ -2,6 +2,33 @@
 #include <iostream>
 #include <fstream>
 #include <typeinfo>
+#include <cmath>
+
+
+//------------------------------------------------------------------------------------------------------------
+// Esta seccion se encarga del manejo de coordenadas.
+//------------------------------------------------------------------------------------------------------------
+struct Coordinate{
+    int vertical;
+    int horizontal;
+};
+
+/** Solicita un float de 4 cifras y devuelve una coordenada (Con valor vertical y horizontal) */
+Coordinate askForCoordinate(){
+    float inputCoordinate;
+    Coordinate myCordinate{};
+    std::cout << "Ingrese la coordenada: \n";
+    std::cin >> inputCoordinate;
+    // Extrae el valor entero  (vertical)
+    myCordinate.vertical = (int)inputCoordinate;
+    // Extrae el valor decimal (horizontal)
+    /** Al valor ingresado, le quita el entero, dejando solo lo decimal y lo multiplica por 100*/
+    myCordinate.horizontal =  (int)((inputCoordinate-myCordinate.vertical)*100);
+    return myCordinate;
+}
+//------------------------------------------------------------------------------------------------------------
+
+
 /** Crea un tablero (board) que sera usado para el juego.*/
 int** createBoard(int columns, int rows){
     // TODO: ver porque no funciona con int board[columns][rows];
@@ -209,6 +236,10 @@ void playTheTurn(int** board,int player){
     }
 
 int main() {
+    // Solicita coordinadas
+    Coordinate myCoordinate = askForCoordinate();
+    std::cout << myCoordinate.vertical << "|" << myCoordinate.horizontal<< "\n";
+
     // Determinan el bando del jugador. (Positivo si es blanco, negativo si es negro)
     int currentPlayer = 1; // Comienza el blanco
 
