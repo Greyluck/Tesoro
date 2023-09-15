@@ -64,10 +64,17 @@ int** placeChest(int** board,int player){
     const int EMPTY = 0;
     const int CHEST = 6;
     const int CHESTS = 8;
+    std::string currentPlayer;
+
+    if (player == 1){
+        currentPlayer = "blanco";
+    } else {
+        currentPlayer = "negro";
+    }
 
     // Le solicita al usuario ingresar la coordenada del cofre.
     int column, row;
-    std::cout << "Jugador "<< player <<", elige la columna donde colocaras el nuevo tesoro: \n";
+    std::cout << "Jugador "<< currentPlayer <<", elige la columna donde colocaras el nuevo tesoro: \n";
     std::cin >> column;
     std::cout << "Elige la fila donde colocaras este tesoro: \n";
     std::cin >> row;
@@ -104,9 +111,22 @@ int** placeChests(int** board){
     return board;
 }
 
+/** Saca un tesoro de su casilla*/
+int ** removeChest(int** board,int player,int column, int row){
+    //TODO (TENER EN CUENTA QUE SI SE SACA UN TESORO DE UNA CASILLA CON DOBLE TESORO DEBE QUEDAR EL OTRO)
+    return board;
+}
+
 /** Mueve los tesoros*/
-int** moveChest(int** board,int player){
-    // TODO: Ingresar metodos
+int** moveChest(int** board,int player,int column, int row){
+    // Saca el cofre de la posicion que estaba.
+    removeChest(board,int player,int column, int row)
+
+    // Solicita que ingreses donde moveras el tesoro
+    placeChest(board,player);
+    //TODO: El place debe verificar que no se lo coloque sobre un espia,si es asi, el espia cava.
+
+    // Regresa el tablero
     return board;
 }
 
@@ -132,7 +152,7 @@ int** placeTheSpy(int** board,int player){
 
     // Hay dos tesoros?
     if (board[column][row] == BOTHCHESTS){   // Si, hay 2 tesoros
-        board = moveChest(board,player);     // Debo mover mi tesoro.
+        board = moveChest(board,player,column,row);     // Debo mover mi tesoro.
         chestMoved = true;
         board[column][row]= CHEST * -player; // Queda el de mi rival
     }
@@ -160,7 +180,8 @@ int** placeTheSpy(int** board,int player){
     }
 
     // Sino movi mi tesoro, puedo moverlo ahora
-    if (chestMoved == false){
+    if (!chestMoved){
+        //TODO: Ask the user to move the chest
         board = moveChest(board,player);
     }
 
