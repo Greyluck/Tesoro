@@ -7,14 +7,14 @@
 //------------------------------------------------------------------------------------------------------------
 // Constantes que determinan los valores de las celdas
 const int EMPTY = 0;           // No hay tesoro
-const int CHEST= 6;            // Hay tesoro
+const int CHEST= 1;            // Hay tesoro
 const int DIGGINGTIME = 5;     // Cavando
 const int SPY = 7;             // Espia
 const int CHESTS = 8;          // Hay 2 tesoros
 
 // Configuraciones de juego:
-const int CHESTQUANTITY = 1;       // Cantidad de cofres por jugador //TODO: Actualizar
-const int COLUMNS = 5, ROWS = 5; // Tamaño del tablero.
+const int CHESTQUANTITY = 5;       // Cantidad de cofres por jugador //TODO: Actualizar
+const int COLUMNS = 20, ROWS = 20; // Tamaño del tablero.
 
 // Variables para el funcionamiento del juego
 const std::string PLAYER1NAME = "blanco";           // Nombre del jugador 1
@@ -63,6 +63,58 @@ Coordinate askForCoordinate(){
     return myCordinate;
 }
 //------------------------------------------------------------------------------------------------------------
+
+
+//------------------------------------------------------------------------------------------------------------
+// Esta seccion se encarga exportar la info para archivos externos.
+//------------------------------------------------------------------------------------------------------------
+/** Exporta el tablero para que solo el jugador correspondiente vea los valores*/
+void exportBoard(int** board) {
+    //--------------------------------------------------------
+    FILE *masterFile;
+    FILE *playerOneFile;
+    FILE *playerTwoFile;
+
+    masterFile    = fopen("../Boards/ResultadoMaestros.csv", "w");
+    playerOneFile = fopen("../Boards/Resultado1.csv",        "w");
+    playerTwoFile = fopen("../Boards/Resultado2.csv",        "w");
+
+    for (int row = 0; row < ROWS; row++){
+        for (int column = 0; column < COLUMNS; column++){
+            // Imprime toda la info
+            fprintf(masterFile, "|%i", board[column][row]);
+
+            // Imprime la info que el jugador 1 puede ver.
+            if (board[column][row]==-SPY || board[column][row]==-CHEST){
+                fprintf(playerOneFile, "|%i", 0);
+            } else {
+                fprintf(playerOneFile, "|%i", board[column][row]);
+            }
+
+            // Imprime la info que el jugador 2 puede ver.
+            if (board[column][row]==SPY || board[column][row]==CHEST){
+                fprintf(playerTwoFile, "|%i", 0);
+            } else {
+                // Si es espia o cofre, le invierte el signo para que el jugador 2 lo vea normal
+                if (board[column][row]==-SPY || board[column][row]==-CHEST){
+                    fprintf(playerTwoFile, "|%i", -board[column][row]);
+                } else {
+                    fprintf(playerTwoFile, "|%i", board[column][row]);
+                }
+
+            }
+
+        }
+        fprintf(masterFile, "|\n");
+        fprintf(playerOneFile, "|\n");
+        fprintf(playerTwoFile, "|\n");
+    }
+    //--------------------------------------------------------
+    fclose(masterFile);
+    fclose(playerOneFile);
+    fclose(playerTwoFile);
+}
+
 
 
 //------------------------------------------------------------------------------------------------------------
@@ -134,6 +186,9 @@ void printBoard(int** board,int columns,int rows){
         printf("|\n");
     }
     printf("\n");
+
+    // Exporta los tableros
+    exportBoard(board);
 }
 
 void updateBoard(int** board){
@@ -279,6 +334,10 @@ int ** removeChest(int** board,int player,int column, int row){
 
 /** Mueve los tesoros*/
 int** moveChest(int** board,int player,int column, int row){
+    // TODO: IMPORTANTE: Los cofres deberian poder moverse solamente a celdas adyacentes,
+    // TODO: para ello se debera comparar los valores de la columna y la fila y ver que la diferencia con la
+    // TODO: posicion sea de 1. Por el momento se lo dejara con posicionamiento libre.
+
     std::cout << "Moviendo el tesoro que estaba en "<< column <<"|" << row << "...\n";
 
     // Saca el cofre de la posicion que estaba y lo remplaza por el espia.
@@ -385,22 +444,6 @@ int** placeTheSpy(int** board,int player){
     return board;
 }
 
-//------------------------------------------------------------------------------------------------------------
-// Esta seccion se encarga exportar la info para archivos externos.
-//------------------------------------------------------------------------------------------------------------
-/** Exporta el tablero para que solo el jugador correspondiente vea los valores*/
-void exportBoard(int** board) {
-    //--------------------------------------------------------
-    FILE *masterFile;
-    masterFile = fopen("../Boards/ResultadoMaestros.csv", "w");
-    for (int column = 0; column < COLUMNS; column++) {
-        for (int row = 0; row < ROWS; row++)
-            fprintf(masterFile, "|%i", board[column][row]);
-        fprintf(masterFile, "|\n");
-    }
-    //--------------------------------------------------------
-    fclose(masterFile);
-}
 
 
 //------------------------------------------------------------------------------------------------------------
