@@ -3,7 +3,7 @@
 
 
 //------------------------------------------------------------------------------------------------------------
-// Esta seccion gestiona las constantes globales.
+// VARIABLES GLOBALES | Esta seccion gestiona las constantes globales.
 //------------------------------------------------------------------------------------------------------------
 // Constantes que determinan los valores de las celdas
 const int EMPTY = 0;           // No hay tesoro
@@ -12,20 +12,25 @@ const int DIGGINGTIME = 5;     // Cavando
 const int SPY = 7;             // Espia
 const int CHESTS = 8;          // Hay 2 tesoros
 
+// El modo debug se utilizar para mostrar el tablero por consola. Se lo debe activar para eso cambiando a true.
+const bool DEBUGMODE = true; // false/False
+
 // Configuraciones de juego:
-const int CHESTQUANTITY = 5;       // Cantidad de cofres por jugador //TODO: Actualizar
+const int CHESTQUANTITY = 4;       // Cantidad de cofres por jugador
 const int COLUMNS = 20, ROWS = 20; // Tamaño del tablero.
 
 // Variables para el funcionamiento del juego
 const std::string PLAYER1NAME = "blanco";           // Nombre del jugador 1
 const std::string PLAYER2NAME = "negro";            // Nombre del jugador 2
+
+// Condicion de victoria
 int playerOneRemainingChests = CHESTQUANTITY;       // Cofres restantes del jugador 1
 int playerTwoRemainingChests = CHESTQUANTITY;       // Cofres restantes del jugador 1
 bool victory = false;                               // Condicion de victoria.
 
 
 //------------------------------------------------------------------------------------------------------------
-// Esta seccion se encarga del manejo de coordenadas.
+// COORDENADAS | Esta seccion se encarga del manejo de coordenadas.
 //------------------------------------------------------------------------------------------------------------
 struct Coordinate{
     int vertical;
@@ -66,7 +71,7 @@ Coordinate askForCoordinate(){
 
 
 //------------------------------------------------------------------------------------------------------------
-// Esta seccion se encarga exportar la info para archivos externos.
+// SALIDA | Esta seccion se encarga exportar la info para archivos externos.
 //------------------------------------------------------------------------------------------------------------
 /** Exporta el tablero para que solo el jugador correspondiente vea los valores*/
 void exportBoard(int** board) {
@@ -118,7 +123,7 @@ void exportBoard(int** board) {
 
 
 //------------------------------------------------------------------------------------------------------------
-// Esta seccion se encarga de crear o imprir el tablero
+// TABLERO | Esta seccion se encarga de crear o imprir el tablero
 //------------------------------------------------------------------------------------------------------------
 /** Crea un tablero (board) que sera usado para el juego. (Lo hace usando punteros)*/
 int** createBoard(int columns, int rows){
@@ -142,50 +147,50 @@ int** createBoard(int columns, int rows){
 
 /** Muestra el tablero (board) que sera usado para el juego.*/
 void printBoard(int** board,int columns,int rows){
-    printf("                       TABLERO DE JUEGO: \n");
+    if (DEBUGMODE){
+        printf("                       TABLERO DE JUEGO: \n");
 
-    // Lo que se agregue en esta seccion se imprimie una sola vez
-    std::cout << "  |";
+        // Lo que se agregue en esta seccion se imprimie una sola vez
+        std::cout << "  |";
 
-    // Carca los valores del titulo de las columnas
-    for (int column = 0; column < columns; column++){
-        if (column < 10){
-            std::cout << "0" << column << "|";
-        }
-        else{
-            std::cout << column  << "|";
-        }
-    }
-    std::cout << "\n";
-
-    // TODO: Por algun motivo la impresion del tablero se debe hacer opuesta a su creacion.
-    for (int row = 0; row < rows; row++){
-        // Lo que se agregue en esta seccion se imprimie en cada linea
-
-        if (row < 0){
-            std::cout << "0" << row << "|";
-        }
-
-        if (row < 10){
-            std::cout << "0" << row << "|";
-        }
-        else{
-            std::cout << row  << "|";
-        }
-
+        // Carca los valores del titulo de las columnas
         for (int column = 0; column < columns; column++){
-            // Lo que se agregue en esta seccion se imprime en cada celda
-            if (board[column][row]>=0){
-                printf(" %i ", board[column][row]);
-            } else { // Jugador Negro, numeros negativos (Hay que hacer lugar para el -)
-                printf("%i ", board[column][row]);
+            if (column < 10){
+                std::cout << "0" << column << "|";
+            }
+            else{
+                std::cout << column  << "|";
+            }
+        }
+        std::cout << "\n";
+
+        // Por algun motivo la impresion del tablero se debe hacer opuesta a su creacion.
+        for (int row = 0; row < rows; row++){
+            // Lo que se agregue en esta seccion se imprimie en cada linea
+
+            if (row < 0){
+                std::cout << "0" << row << "|";
             }
 
+            if (row < 10){
+                std::cout << "0" << row << "|";
+            }
+            else{
+                std::cout << row  << "|";
+            }
 
+            for (int column = 0; column < columns; column++){
+                // Lo que se agregue en esta seccion se imprime en cada celda
+                if (board[column][row]>=0){
+                    printf(" %i ", board[column][row]);
+                } else { // Jugador Negro, numeros negativos (Hay que hacer lugar para el -)
+                    printf("%i ", board[column][row]);
+                }
+            }
+            printf("|\n");
         }
-        printf("|\n");
+        printf("\n");
     }
-    printf("\n");
 
     // Exporta los tableros
     exportBoard(board);
@@ -235,7 +240,7 @@ void updateBoard(int** board){
 
 
 //------------------------------------------------------------------------------------------------------------
-// Esta seccion se encarga de mover y colocar cofres y espias
+// COFRES | Esta seccion se encarga de mover y colocar cofres y espias
 //------------------------------------------------------------------------------------------------------------
 /** Solicita al jugador ingresar una celda para colocar un unico tesoro*/
 int** placeChest(int** board,int player){
@@ -335,8 +340,8 @@ int ** removeChest(int** board,int player,int column, int row){
 /** Mueve los tesoros*/
 int** moveChest(int** board,int player,int column, int row){
     // TODO: IMPORTANTE: Los cofres deberian poder moverse solamente a celdas adyacentes,
-    // TODO: para ello se debera comparar los valores de la columna y la fila y ver que la diferencia con la
-    // TODO: posicion sea de 1. Por el momento se lo dejara con posicionamiento libre.
+    // para ello se debera comparar los valores de la columna y la fila y ver que la diferencia con la
+    // posicion sea de 1. Por el momento se lo dejara con posicionamiento libre.
 
     std::cout << "Moviendo el tesoro que estaba en "<< column <<"|" << row << "...\n";
 
@@ -439,15 +444,12 @@ int** placeTheSpy(int** board,int player){
         }//--------------------------------------------------------------------------------------
 
     }
-
-
     return board;
 }
 
 
-
 //------------------------------------------------------------------------------------------------------------
-// Esta seccion se encarga de manejar los turnos
+// TURNOS | Esta seccion se encarga de manejar los turnos
 //------------------------------------------------------------------------------------------------------------
 
 /** Determina la sucesion de acciones que se realizan en un turno*/
@@ -467,7 +469,7 @@ void playTheTurn(int** board,int player){
 }
 
 //------------------------------------------------------------------------------------------------------------
-// Esta seccion ejecuta el programa
+// PRINCIPAL | Esta seccion ejecuta el programa
 //------------------------------------------------------------------------------------------------------------
 int main() {
     // Determinan el bando del jugador. (Positivo si es blanco, negativo si es negro)
