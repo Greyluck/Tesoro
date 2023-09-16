@@ -7,7 +7,7 @@
 //------------------------------------------------------------------------------------------------------------
 // Constantes que determinan los valores de las celdas
 const int EMPTY = 0;           // No hay tesoro
-const int CHEST= 1;            // Hay tesoro
+const int CHEST= 6;            // Hay tesoro
 const int DIGGINGTIME = 5;     // Cavando
 const int SPY = 7;             // Espia
 const int CHESTS = 8;          // Hay 2 tesoros
