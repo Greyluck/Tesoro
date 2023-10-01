@@ -145,6 +145,7 @@ int** createBoard(int columns, int rows){
     return board;
 }
 
+
 /** Muestra el tablero (board) que sera usado para el juego.*/
 void printBoard(int** board,int columns,int rows){
     if (DEBUGMODE){
@@ -233,6 +234,17 @@ void updateBoard(int** board){
     }
 }
 
+// Funcion creada para borrar el tablero y liberar la memoria
+void deleteBoard(int** board) {
+    //Se tiene que borrar cada fila primero, y luego borrar el tablero
+    for (int column = 0; column < COLUMNS; column++) {
+        // Borra las filas
+        delete[] board[column];
+    }
+    // Borrar el tablero
+    delete[] board;
+}
+//TODO: Revisar si se requiere crear mas metodos para liberar memoria
 
 //------------------------------------------------------------------------------------------------------------
 
@@ -493,5 +505,7 @@ int main() {
         updateBoard(myBoard);
         curentplayer = -curentplayer;
     }
+    // borrar el tablero
+    deleteBoard(myBoard);
 }
 
