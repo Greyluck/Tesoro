@@ -55,6 +55,12 @@ build CMakeFiles/Tesoro.dir/main.cpp.obj: CXX_COMPILER__Tesoro_unscanned_Debug F
   OBJECT_DIR = CMakeFiles\Tesoro.dir
   OBJECT_FILE_DIR = CMakeFiles\Tesoro.dir
 
+build CMakeFiles/Tesoro.dir/Board.cpp.obj: CXX_COMPILER__Tesoro_unscanned_Debug F$:/Principal/Proyectos$ Git/Tesoro/Board.cpp || cmake_object_order_depends_target_Tesoro
+  DEP_FILE = CMakeFiles\Tesoro.dir\Board.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles\Tesoro.dir
+  OBJECT_FILE_DIR = CMakeFiles\Tesoro.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target Tesoro
@@ -63,7 +69,7 @@ build CMakeFiles/Tesoro.dir/main.cpp.obj: CXX_COMPILER__Tesoro_unscanned_Debug F
 #############################################
 # Link the executable Tesoro.exe
 
-build Tesoro.exe: CXX_EXECUTABLE_LINKER__Tesoro_Debug CMakeFiles/Tesoro.dir/main.cpp.obj
+build Tesoro.exe: CXX_EXECUTABLE_LINKER__Tesoro_Debug CMakeFiles/Tesoro.dir/main.cpp.obj CMakeFiles/Tesoro.dir/Board.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\Tesoro.dir

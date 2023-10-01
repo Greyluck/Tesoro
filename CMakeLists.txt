@@ -3,4 +3,7 @@ project(Tesoro)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(Tesoro main.cpp)
+add_executable(Tesoro main.cpp
+        Board.cpp
+        Board.h
+)
