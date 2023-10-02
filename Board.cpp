@@ -26,6 +26,7 @@ void Board::setInitialValues(int mycolumns, int myrows, int mychestQuantity){
     curentPlayer=1;
     player1Name = "Blanco";
     player2Name = "Negro";
+    curentplayerName = player1Name;
 
     // Field values
     emptyFieldValue=0;
@@ -118,13 +119,6 @@ void Board::placeChest(){
 void Board::placeInitialChests() {
     // Por cada cofre inicial ejecuto la colocacion del mismo por turnos.
     for (int chest = 1; chest <= chestQuantity * 2; chest++) {
-        // Defino que jugador esta jugando.
-        if (curentPlayer == 1) {
-            curentplayerName = player1Name;
-        } else {
-            curentplayerName = player2Name;
-        }
-
         // Indico el inicio de su turno
         std::cout << "Turno de " << curentplayerName << ".\n";
 
@@ -132,7 +126,7 @@ void Board::placeInitialChests() {
         placeChest();
 
         // Cambio de jugador
-        curentPlayer = -curentPlayer;
+        swapCurentPlayer();
     }
 }
 
