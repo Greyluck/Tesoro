@@ -30,7 +30,6 @@ class Board {
         int playerTwoRemainingChests = CHESTQUANTITY;       // Cofres restantes del jugador 1
 
 
-
     //------------------------------------------------------------------------------------------------------------
     // COFRES | Esta seccion se encarga de mover y colocar cofres y espias en el tablero
     //------------------------------------------------------------------------------------------------------------
