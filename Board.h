@@ -3,32 +3,6 @@
 #include <iostream>
 
 class Board {
-    //------------------------------------------------------------------------------------------------------------
-    // Constante y variables.
-    //------------------------------------------------------------------------------------------------------------
-    // Constantes que determinan los valores de las celdas del tablero
-        const int EMPTY = 0;           // No hay tesoro
-        const int CHEST= 6;            // Hay tesoro
-        const int DIGGINGTIME = 5;     // Cavando
-        const int SPY = 7;             // Espia
-        const int CHESTS = 8;          // Hay 2 tesoros
-
-    // Variables que determinan el tamaño del tablero y la cantidad de cofres
-        int CHESTQUANTITY = 4;       // Cantidad de cofres por jugador
-        int COLUMNS = 20, ROWS = 20; // Tamaño del tablero por defecto.
-
-    // El modo debug se utiliza para mostrar u ocultar el tablero por consola.
-    // (Se lo puede activar cambiando su estado a true.)
-        const bool DEBUGMODE = true; // false/False
-
-    // Variables para el funcionamiento del juego
-        const std::string PLAYER1NAME = "blanco";           // Nombre del jugador 1
-        const std::string PLAYER2NAME = "negro";            // Nombre del jugador 2
-
-    // Cantidad de cofres en juego (Condicion de victoria)
-        int playerOneRemainingChests = CHESTQUANTITY;       // Cofres restantes del jugador 1
-        int playerTwoRemainingChests = CHESTQUANTITY;       // Cofres restantes del jugador 1
-
 
     //------------------------------------------------------------------------------------------------------------
     // COFRES | Esta seccion se encarga de mover y colocar cofres y espias en el tablero

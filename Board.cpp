@@ -1,44 +1,39 @@
 #include <cstdio>
 #include "Board.h"
+#include "Coordinate.h"
+
 using namespace std;
 
+//------------------------------------------------------------------------------------------------------------
+// Constante y variables.
+//------------------------------------------------------------------------------------------------------------
+// Constantes que determinan los valores de las celdas del tablero
+const int EMPTY = 0;           // No hay tesoro
+const int CHEST= 6;            // Hay tesoro
+const int DIGGINGTIME = 5;     // Cavando
+const int SPY = 7;             // Espia
+const int CHESTS = 8;          // Hay 2 tesoros
+
+// Variables que determinan el tamaño del tablero y la cantidad de cofres
+int CHESTQUANTITY = 4;       // Cantidad de cofres por jugador
+int COLUMNS = 20, ROWS = 20; // Tamaño del tablero por defecto.
+
+// El modo debug se utiliza para mostrar u ocultar el tablero por consola.
+// (Se lo puede activar cambiando su estado a true.)
+const bool DEBUGMODE = true; // false/False
+
+// Variables para el funcionamiento del juego
+const std::string PLAYER1NAME = "blanco";           // Nombre del jugador 1
+const std::string PLAYER2NAME = "negro";            // Nombre del jugador 2
+
+// Cantidad de cofres en juego (Condicion de victoria)
+int playerOneRemainingChests = CHESTQUANTITY;       // Cofres restantes del jugador 1
+int playerTwoRemainingChests = CHESTQUANTITY;       // Cofres restantes del jugador 1
+
 //------------------------------------------------------------
-// Crea el tipo de dato coordenada que se utiliza para solicitar al usuario coordenaras
-struct Coordinate {
-    int horizontal;
-    int vertical;
-};
 
-static Coordinate askForCoordinate(int maxColums,int maxRows){
-    Coordinate myCoordinate{};
-    int acceptedCoordinate = false;
-    while (!acceptedCoordinate) {
-        int inputV, inputH;
-        // Ingresa la coordenada vertical
-        std::cout << "   - Ingrese la coordenada vertical: ";
-        std::cin >> inputV;
-        // Si la vertical esta bien, pide la horizontal
-        if (inputV >= 0 && inputV < maxColums) {
-            std::cout << "   - Ingrese la coordenada horizontal: ";
-            std::cin >> inputH;
-            // Si la horizontal tambeinte esta bien, las asigna y acepta la coordenada
-            if (inputH >= 0 && inputH < maxRows) {
-                myCoordinate.horizontal = inputH;
-                myCoordinate.vertical = inputV;
-                acceptedCoordinate = true;
-                return myCoordinate;
-            } else {
-                std::cout << "  - Fila fuera del tablero, intente de nuevo \n";
-            }
-        } else {
-            std::cout << "  - Columna fuera del tablero, intente de nuevo \n";
-        }
-    }
-}
 
-//------------------------------------------------------------------------------------------------------------
-// SALIDA | Esta seccion se encarga exportar la info para archivos externos.
-//------------------------------------------------------------------------------------------------------------
+
 //------------------------------------------------------------------------------------------------------------
 // SALIDA | Esta seccion se encarga exportar la info para archivos externos.
 //------------------------------------------------------------------------------------------------------------
@@ -233,7 +228,8 @@ int** Board::placeChest(int** board,int player){
     while (!alocatedChest){
         // Consulta de cordenada ------------------------------
         std::cout << " - Donde colocaras el tesoro?:\n";
-        Coordinate myCoordinate = askForCoordinate(COLUMNS,ROWS);
+        Coordinate myCoordinate;
+        myCoordinate.askForCoordinate(COLUMNS,ROWS);
         column = myCoordinate.vertical;
         row    = myCoordinate.horizontal;
         // ----------------------------------------------------
@@ -341,7 +337,8 @@ int** Board::placeTheSpy(int** board,int player){
     while (!spyPlaced){
         // Consulta de cordenada ------------------------------
         std::cout << " - Donde colocaras tu espia \n";
-        Coordinate myCoordinate = askForCoordinate(COLUMNS,ROWS);
+        Coordinate myCoordinate;
+        myCoordinate.askForCoordinate(COLUMNS,ROWS);
         int column = myCoordinate.vertical;
         int row    = myCoordinate.horizontal;
         std::cout << "   - El espia intentara ubicarse en columna "<< column <<" fila " << row << "\n";
