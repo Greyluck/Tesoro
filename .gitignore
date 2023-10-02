@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+Boards/Resultado1.csv
+Boards/Resultado2.csv
+Boards/ResultadoMaestros.csv
+cmake-build-debug/Testing/Temporary/LastTest.log
