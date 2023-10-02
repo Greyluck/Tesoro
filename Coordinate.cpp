@@ -2,6 +2,7 @@
 #include "Coordinate.h"
 using namespace std;
 
+// TODO: Verificar si es posible evitar pasar coordenadas y que las tome directo del board
 Coordinate Coordinate::askForCoordinate(int maxColums,int maxRows){
     Coordinate myCoordinate{};
     int acceptedCoordinate = false;

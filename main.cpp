@@ -15,15 +15,11 @@ int main() {
     // Solicita a ambos usuarios que ingresen sus tesoros.
     theBoard.placeInitialChests();
 
-    /*
     // Turnos
-    int curentplayer = 1; // Comienza el blanco
-    while (theBoard.victory){
-        theBoard.playTheTurn(myBoard,curentplayer);
-        theBoard.updateBoard(myBoard);
-        curentplayer = -curentplayer;
+    while (!theBoard.returnVictoryStatus()){
+        theBoard.playTheTurn();
     }
     // borrar el tablero
-    theBoard.deleteBoard(myBoard);
-    */
-}
+    //theBoard.deleteBoard(myBoard);
+
+};

@@ -8,8 +8,9 @@ int columns, rows, chestQuantity;
 int curentPlayer;
 int** matrix;
 std::string curentplayerName, player1Name,player2Name;
-int emptyFieldValue,chestFieldValue,multipleChestFieldValue,spyFieldValue;
+int emptyFieldValue,chestFieldValue,multipleChestFieldValue,spyFieldValue,diggingFieldValue;
 bool debug;
+bool victory;
 
 //------------------------------------------------------------------------------------------------------------
 // TABLERO | Esta seccion se encarga de crear o imprir el tablero
@@ -27,10 +28,22 @@ void Board::setInitialValues(int mycolumns, int myrows, int mychestQuantity){
     player2Name = "Negro";
 
     // Field values
-    emptyFieldValue=1;
+    emptyFieldValue=0;
     chestFieldValue=6;
     spyFieldValue=7;
     multipleChestFieldValue=8;
+    diggingFieldValue=5;
+
+    // Condicion de victora:
+    victory = false;
+}
+
+bool Board::returnVictoryStatus(){
+    return victory;
+}
+
+void Board::swapCurentPlayer(){
+    curentPlayer = -curentPlayer;
 }
 
 void Board::createMatrix(){
@@ -219,6 +232,161 @@ void Board::exportBoard() {
     fclose(playerTwoFile);
 }
 
+
+void Board::playTheTurn(){
+    std::cout << "Turno del jugador "<< curentplayerName <<"\n";
+    // El jugador coloca un espia.
+    placeTheSpy();
+    // Actualiza el tabler
+    updateBoard();
+    // Da paso al siguiente jugador
+    swapCurentPlayer();
+}
+
+void Board::placeTheSpy(){
+    // Determina si el usuario ya movio un tesoro.
+    bool chestMoved = false;
+    bool spyPlaced = false;
+
+    while (!spyPlaced){
+        // Consulta de cordenada ------------------------------
+        std::cout << " - Donde colocaras tu espia \n";
+        Coordinate myCoordinate;
+        myCoordinate.askForCoordinate(columns,rows);
+        int column = myCoordinate.vertical;
+        int row    = myCoordinate.horizontal;
+        std::cout << "   - El espia intentara ubicarse en columna "<< column <<" fila " << row << "\n";
+        // ----------------------------------------------------
+
+        // Habia tesoros?
+        if ( matrix[column][row] == chestFieldValue* curentPlayer
+             || matrix[column][row] == chestFieldValue* -curentPlayer
+             || matrix[column][row] == multipleChestFieldValue){
+            std::cout << "       - El espia encontro un tesoro...";
+            spyPlaced=true;
+
+            if(matrix[column][row] == chestFieldValue* curentPlayer){
+                std::cout << " pero era nuestro. Necesitamos moverlo.\n\n";
+                moveChest(column,row);     // Debo mover mi tesoro.
+                chestMoved = true;
+                spyPlaced=true;
+            }
+
+            if(matrix[column][row] == chestFieldValue* -curentPlayer){
+                std::cout << " y es del rival! Esta a extrayendo el tesoro!\n\n";
+                digForTreasure(column,row);     // Empezamos a cavar
+                spyPlaced=true;
+            }
+
+            if(matrix[column][row] == multipleChestFieldValue){
+                std::cout << " de echo hay varios.";
+                std::cout << "... Necesitamos mover el nuestro.\n";
+                moveChest(column,row);          // Debo mover mi tesoro...
+                digForTreasure(column,row);     // ... y empezar a cavar
+                chestMoved = true;
+                spyPlaced = true;
+
+                std::cout << "... ya podemos empezar a cavar\n";
+                digForTreasure(column,row);     // Empezamos a cavar
+            }
+        } else { // NO HABIA TESOROS
+            // Hay otro espia?
+            if (matrix[column][row] == spyFieldValue* -curentPlayer){ // Si, nos matamos.
+                std::cout << "       - Hay otro espia! Ambos mueren.\n";
+                matrix[column][row]=emptyFieldValue;
+                printBoard();
+                spyPlaced=true;
+            }
+
+            if (matrix[column][row] == spyFieldValue* curentPlayer){ // Si, pero es nuestro.
+                std::cout << "       - Hay otro espia... pero es nuestro, me voy a otro lado.\n";
+                //NOTA: ACA NO LLEVA "spyPlaced=true;"
+            }
+
+            else {
+                std::cout << "       - No hay nada aca, me quedo patruyando.\n";
+                matrix[column][row] = spyFieldValue * curentPlayer;
+                printBoard();
+            }
+        }
+
+        //TODO: Agregar que pasa sino movi el tesoro este turno (Ver version previa).
+    }
+}
+
+void Board::removeChest(int column, int row){
+    // Hay mas de un tesoro?
+    if (matrix[column][row] == multipleChestFieldValue){
+        // Si, hay mas de un tesoro...
+        matrix[column][row] = chestFieldValue * -curentPlayer; // ...dejo el del rival
+    } else {
+        // No, esta el mio...
+        if (matrix[column][row] == chestFieldValue * curentPlayer){
+            matrix[column][row] = spyFieldValue; // ...me quedo en la casilla de donde saque el tesoro.
+        }
+    }
+    std::cout << " - Se saco el tesoro de la casilla "<< column <<"." << row << "\n";
+}
+
+void Board::moveChest(int column, int row){
+    // TODO: IMPORTANTE: Los cofres deberian poder moverse solamente a celdas adyacentes,
+    // para ello se debera comparar los valores de la columna y la fila y ver que la diferencia con la
+    // posicion sea de 1. Por el momento se lo dejara con posicionamiento libre.
+
+    std::cout << "Moviendo el tesoro que estaba en "<< column <<"|" << row << "...\n";
+
+    // Saca el cofre de la posicion que estaba y lo remplaza por el espia.
+    removeChest(column,row);
+
+    // Solicita que ingreses las nuevas coordenas del cofre.
+    placeChest();
+    //TODO: El place debe verificar que no se lo coloque sobre un espia,si es asi, el espia cava.
+
+    // Regresa el tablero
+}
+
+void Board::digForTreasure (int column, int row){
+    std::cout << "Desenterrando el tesoro rival de la fila "<< column <<"|" << row << "...\n";
+    matrix[column][row] = diggingFieldValue;
+}
+
+void Board::updateBoard(){
+    // Vacia el contador de cofres, para ir sumandolos a medida que aparescan
+    int playerOneRemainingChests, playerTwoRemainingChests = 0;
+
+    // Recorre todas las celdas
+    for (int column = 0; column < columns ; column++) {
+        for (int row = 0; row < rows ; row++){
+            // Procede a cavar (reduce el valor de la celda en 1)
+            if (0<matrix[column][row] && matrix[column][row]<6)
+                matrix[column][row]--;
+
+            // Si hay un cofre lo cuento
+            if (matrix[column][row]==chestFieldValue){
+                playerOneRemainingChests++;
+            }
+            if (matrix[column][row]==-chestFieldValue){
+                playerTwoRemainingChests++;
+            }
+            if (matrix[column][row]==multipleChestFieldValue){
+                playerOneRemainingChests++;
+                playerTwoRemainingChests++;
+            }
+        }
+    }
+
+    if (playerOneRemainingChests <= 0){
+        std::cout << "Gano el jugador "<<curentplayerName<<".\n";
+        victory = true;
+    } else {
+        if (playerTwoRemainingChests <= 0) {
+            std::cout << "Gano el jugador " << curentplayerName << ".\n";
+            victory = true;
+        }
+    }
+}
+
+//TODO: Revisar si se requiere crear mas metodos para liberar memoria
 
 
 
