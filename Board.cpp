@@ -2,14 +2,11 @@
 #include "Board.h"
 using namespace std;
 
-
 //------------------------------------------------------------
 // Crea el tipo de dato coordenada que se utiliza para solicitar al usuario coordenaras
 struct Coordinate {
     int horizontal;
     int vertical;
-
-    /** Solicita al usuario que ingrese una coordenada por teclado y la devuelve como tipo de dato*/
 };
 
 static Coordinate askForCoordinate(int maxColums,int maxRows){
@@ -43,11 +40,12 @@ static Coordinate askForCoordinate(int maxColums,int maxRows){
 }
 
 
-
 //------------------------------------------------------------------------------------------------------------
 // SALIDA | Esta seccion se encarga exportar la info para archivos externos.
 //------------------------------------------------------------------------------------------------------------
-/** Exporta el tablero para que solo el jugador correspondiente vea los valores*/
+//------------------------------------------------------------------------------------------------------------
+// SALIDA | Esta seccion se encarga exportar la info para archivos externos.
+//------------------------------------------------------------------------------------------------------------
 void Board::exportBoard(int** board) {
     //--------------------------------------------------------
     FILE *masterFile;
@@ -97,7 +95,6 @@ void Board::exportBoard(int** board) {
 //------------------------------------------------------------------------------------------------------------
 // TABLERO | Esta seccion se encarga de crear o imprir el tablero
 //------------------------------------------------------------------------------------------------------------
-/** Crea un tablero (board) que sera usado para el juego. (Lo hace usando punteros)*/
 int** Board::createBoard(int columns, int rows){
     // Crea el tablero que voy a usar (sus celdas no tienen info)
     int** board;
@@ -118,7 +115,6 @@ int** Board::createBoard(int columns, int rows){
 }
 
 
-/** Muestra el tablero (board) que sera usado para el juego.*/
 void Board::printBoard(int** board,int columns,int rows){
     if (DEBUGMODE){
         printf("                       TABLERO DE JUEGO: \n");
@@ -221,15 +217,9 @@ void Board::deleteBoard(int** board) {
 //------------------------------------------------------------------------------------------------------------
 
 
-
-
-
-
-
 //------------------------------------------------------------------------------------------------------------
 // COFRES | Esta seccion se encarga de mover y colocar cofres y espias
 //------------------------------------------------------------------------------------------------------------
-/** Solicita al jugador ingresar una celda para colocar un unico tesoro*/
 int** Board::placeChest(int** board,int player){
     // TODO: Se requiere verificar que los jugadores no sean capaces de colocar tesoros sobre sus campos llenos.
 
@@ -282,7 +272,6 @@ int** Board::placeChest(int** board,int player){
     return board;
 }
 
-/** Solicita al jugador ingresar todos los tesoros iniciales*/
 int** Board::placeInitialChests(int** board){
     int player = 1; // Comienza el jugador blanco
     std::string curentplayerName;
@@ -308,7 +297,6 @@ int** Board::placeInitialChests(int** board){
     return board;
 }
 
-/** Solo se utiliza cuando se mueve un cofre propio para sacarlo de casilla. .*/
 int ** Board::removeChest(int** board,int player,int column, int row){
     // Hay mas de un tesoro?
     if (board[column][row] == CHESTS){
@@ -324,7 +312,6 @@ int ** Board::removeChest(int** board,int player,int column, int row){
     return board;
 }
 
-/** Mueve los tesoros*/
 int** Board::moveChest(int** board,int player,int column, int row){
     // TODO: IMPORTANTE: Los cofres deberian poder moverse solamente a celdas adyacentes,
     // para ello se debera comparar los valores de la columna y la fila y ver que la diferencia con la
@@ -343,7 +330,6 @@ int** Board::moveChest(int** board,int player,int column, int row){
     return board;
 }
 
-/** Setea una asilla para ser una zona de excavacion, durante la cual no se puede seleccionar.*/
 int** Board::digForTreasure (int** board,int player,int column, int row){
     std::cout << "Desenterrando el tesoro rival de la fila "<< column <<"|" << row << "...\n";
     board[column][row] = DIGGINGTIME;
@@ -351,7 +337,6 @@ int** Board::digForTreasure (int** board,int player,int column, int row){
 }
 
 
-/** Solicita al jugador ingresar una celda para colocar su espia*/
 int** Board::placeTheSpy(int** board,int player){
     // Determina si el usuario ya movio un tesoro.
     bool chestMoved = false;
@@ -424,7 +409,6 @@ int** Board::placeTheSpy(int** board,int player){
     return board;
 }
 
-/** Determina la sucesion de acciones que se realizan en un turno*/
 void Board::playTheTurn(int** board,int player){
     // Determina el nombre del jugador
     std::string curentplayer;
