@@ -13,33 +13,35 @@ struct Coordinate {
 };
 
 static Coordinate askForCoordinate(int maxColums,int maxRows){
-    int acceptedCoordinate = false;
-    int inputCoordinate;
     Coordinate myCoordinate{};
+    int acceptedCoordinate = false;
 
     while (!acceptedCoordinate){
+        // Ingresa la coordenada en formato float (1.15 por ejemplo)
+        float inputCoordinate;
         std::cout << "   - Ingrese la coordenada: ";
         std::cin >> inputCoordinate;
 
-        // Extrae el valor horizontal
-        myCoordinate.horizontal = inputCoordinate%100;
+        // Extrae el valor vertical (La parte entera del float)
+        myCoordinate.vertical = (int)inputCoordinate;
 
-        // Extrae el valor vertical
-        myCoordinate.vertical = (inputCoordinate - myCoordinate.horizontal) /100;
-
-        if (myCoordinate.vertical >= 0 && myCoordinate.horizontal >= 0){
-            if (myCoordinate.vertical < maxColums && myCoordinate.horizontal < maxRows){
+        // Si estas dentro de las columnas aceptadas procede a extraer la parte decimal/horizontal
+        if (myCoordinate.vertical >= 0 && myCoordinate.vertical<maxColums){
+            // Extrae el valor horizontal (La parte decimal del float. Lo hace restandole la parte entera al numero)
+            myCoordinate.horizontal = (int)((inputCoordinate - (float)myCoordinate.vertical)*100);
+            if (myCoordinate.horizontal >= 0 && myCoordinate.horizontal <maxRows){
                 std::cout << "  - Valor aceptado.\n";
                 acceptedCoordinate = true;
+                return myCoordinate;
             } else {
-                std::cout << "  - Valor fuera del tablero, intente de nuevo: \n";
+                std::cout << "  - Fila fuera del tablero, intente de nuevo: \n";
             }
         } else {
-            std::cout << "  - El valor debe ser mayor a 0.\n";
+            std::cout << "  - Columna fuera del tablero, intente de nuevo: \n";
         }
     }
-    return myCoordinate;
 }
+
 
 
 //------------------------------------------------------------------------------------------------------------
