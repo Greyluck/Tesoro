@@ -84,6 +84,8 @@ void Board::placeChest(){
         myCoordinate.askForCoordinate(columns,rows);
         column = myCoordinate.vertical;
         row    = myCoordinate.horizontal;
+        std::cout << "    - Coordenada definada en " << column << "|" <<row<<":\n";
+
         // ----------------------------------------------------
 
         // Si la celda esta vacia graba el cofre con el signo de su jugador

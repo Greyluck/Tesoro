@@ -4,9 +4,12 @@
 class Coordinate {
 
 public:
-    Coordinate askForCoordinate(int maxColums, int maxRows);
-
+    // Variables
     int vertical;
     int horizontal;
+
+    // Metodos
+    void askForCoordinate(int maxColums, int maxRows);
+
 };
 #endif //TESORO_COORDINATE_H

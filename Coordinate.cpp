@@ -3,8 +3,7 @@
 using namespace std;
 
 // TODO: Verificar si es posible evitar pasar coordenadas y que las tome directo del board
-Coordinate Coordinate::askForCoordinate(int maxColums,int maxRows){
-    Coordinate myCoordinate{};
+void Coordinate::askForCoordinate(int maxColums,int maxRows){
     int acceptedCoordinate = false;
     while (!acceptedCoordinate) {
         int inputV, inputH;
@@ -17,10 +16,9 @@ Coordinate Coordinate::askForCoordinate(int maxColums,int maxRows){
             std::cin >> inputH;
             // Si la horizontal tambeinte esta bien, las asigna y acepta la coordenada
             if (inputH >= 0 && inputH < maxRows) {
-                myCoordinate.horizontal = inputH;
-                myCoordinate.vertical = inputV;
+                horizontal = inputH;
+                vertical = inputV;
                 acceptedCoordinate = true;
-                return myCoordinate;
             } else {
                 std::cout << "  - Fila fuera del tablero, intente de nuevo \n";
             }
