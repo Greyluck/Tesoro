@@ -14,28 +14,34 @@ static Coordinate askForCoordinate(int maxColums,int maxRows){
     int acceptedCoordinate = false;
 
     while (!acceptedCoordinate){
-        // Ingresa la coordenada en formato float (1.15 por ejemplo)
+        // Ingresa la coordenada en formato float (01.15 por ejemplo)
         float inputCoordinate;
         std::cout << "   - Ingrese la coordenada: ";
         std::cin >> inputCoordinate;
 
-        // Extrae el valor vertical (La parte entera del float)
-        myCoordinate.vertical = (int)inputCoordinate;
+        // Verifica que el usuario ingrese una coordenada de 5 caracteres (EJ: 00.00)
+        std::string inputString = std::to_string(inputCoordinate);
+        if (inputString.length() == 5){
 
-        // Si estas dentro de las columnas aceptadas procede a extraer la parte decimal/horizontal
-        if (myCoordinate.vertical >= 0 && myCoordinate.vertical<maxColums){
-            // Extrae el valor horizontal (La parte decimal del float. Lo hace restandole la parte entera al numero)
-            myCoordinate.horizontal = (int)((inputCoordinate - (float)myCoordinate.vertical)*100);
-            if (myCoordinate.horizontal >= 0 && myCoordinate.horizontal <maxRows){
-                std::cout << "  - Valor aceptado.\n";
-                acceptedCoordinate = true;
-                return myCoordinate;
+            // Extrae el valor vertical (La parte entera del float)
+            myCoordinate.vertical = (int)inputCoordinate;
+
+            // Si estas dentro de las columnas aceptadas procede a extraer la parte decimal/horizontal
+            if (myCoordinate.vertical >= 0 && myCoordinate.vertical<maxColums){
+                // Extrae el valor horizontal (La parte decimal del float. Lo hace restandole la parte entera al numero)
+                myCoordinate.horizontal = (int)(inputCoordinate*100-(float)myCoordinate.vertical*100);
+                if (myCoordinate.horizontal >= 0 && myCoordinate.horizontal <maxRows){
+                    std::cout << "  - Valor aceptado.\n";
+                    acceptedCoordinate = true;
+                    return myCoordinate;
+                } else {
+                    std::cout << "  - Fila fuera del tablero, intente de nuevo: \n";
+                }
             } else {
-                std::cout << "  - Fila fuera del tablero, intente de nuevo: \n";
+                std::cout << "  - Columna fuera del tablero, intente de nuevo: \n";
             }
-        } else {
-            std::cout << "  - Columna fuera del tablero, intente de nuevo: \n";
         }
+        std::cout << "  - La cordenada no cumple el formato, intente de nuevo: \n";
     }
 }
 
