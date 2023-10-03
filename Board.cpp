@@ -464,6 +464,15 @@ void Board::updateBoard(){
     }
 }
 
+void Board::deleteMatrix(Board board) {
+    //Se tiene que borrar cada fila primero, y luego borrar la matrix
+    for (int column = 0; column < columns; column++) {
+        // Borra las filas
+        delete[] matrix[column];
+    }
+    // Borrar el tablero
+    delete[] matrix;
+}
 //TODO: Revisar si se requiere crear mas metodos para liberar memoria
 
 

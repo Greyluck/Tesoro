@@ -49,5 +49,12 @@ public:
     /** Actualiza el tablero y lo exporta*/
     void updateBoard();
 
+    //TODO: Revisar si se requiere crear mas metodos para liberar memoria
+    /** Borra el la matriz para liberar memoria*/
+    void deleteMatrix(Board board);
+
+
+
+
 #endif //TESORO_BOARD_H
 };
