@@ -9,7 +9,7 @@ bool DEBUG = true;
 int main() {
     // Creamos el tablero que vamos a usar defininedo las filas y columnas
     Board theBoard;
-    theBoard.setInitialValues(20,20,10);
+    theBoard.setInitialValues(5,5,1);//TODO: Setear la cantidad de cofres
     theBoard.createMatrix();
 
     // Solicita a ambos usuarios que ingresen sus tesoros.

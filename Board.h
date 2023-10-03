@@ -14,6 +14,7 @@ public:
 
     /** Solicita al jugador ingresar una celda para colocar un unico tesoro*/
     void placeChest();
+    void placeChest(bool replacing, int column, int row);
 
     /** Solicita al jugador ingresar todos los tesoros iniciales*/
     void placeInitialChests();
