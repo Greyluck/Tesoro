@@ -300,7 +300,7 @@ void Board::exportBoard() {
     fclose(playerOneFile);
     fclose(playerTwoFile);
     */
-    std::cout << "(Debug: La funcion de guardado de tablero fue removida, ver comentario de la funcion)" << endl;
+    std::cout << "(Debug: La funcion de guardado de tablero fue removida, ver comentario de la funcion exportBoard().)" << endl;
 }
 
 
