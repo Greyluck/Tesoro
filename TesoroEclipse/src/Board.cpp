@@ -105,33 +105,45 @@ void Board::placeChest(bool replacing, int previousColumn, int previousRow){
             bool movedInsideBoard = false;
             while (!movedInsideBoard){
                 // Consulta la nueva cordenada basada en la anterior
-                std::cout << " - Hacia donde movera el tesoro el jugador" << curentPlayerName <<endl;
-                std::cout << "   (1) Arriba (2) Abajo (3) Izquierda (4) Derecha:"<<endl;
+            	std::cout << " Se esta moviendo el cofre en la posicion ("<< previousColumn <<"|"<< previousRow << ")"<<endl;
+                std::cout << " - Hacia donde movera el tesoro el jugador " << curentPlayerName <<endl;
+                std::cout << "   (1) Arriba (2) Abajo (3) Izquierda (4) Derecha:";
                 std::cin >> direction;
                 switch (direction) {
                     case 1:     // Arriba
-                        newColumn = previousColumn - 1;
-                        newRow = previousRow;
+                    	std::cout << " - Se desea mover hacia arriba";
+                    	newColumn = previousColumn;
+						newRow = previousRow - 1;
                         break;
                     case 2:     // Abajo
-                        newColumn = previousColumn + 1;
-                        newRow = previousRow;
+                    	std::cout << " - Se desea mover abajo"<<endl;
+                    	newColumn = previousColumn;
+						newRow = previousRow + 1;
+                    	std::cout << "C"<<previousColumn<<"F"<<previousRow<<"-> C"<<newRow<<"F"<< previousRow<< endl;
                         break;
                     case 3:     // Izq
-                        newColumn = previousColumn;
-                        newRow = previousRow - 1;
-                        break;
+                    	std::cout << " - Se desea mover la izquierda";
+                    	newColumn = previousColumn - 1;
+						newRow = previousRow;
+                    	break;
                     case 4:     // Der
-                        newColumn = previousColumn;
-                        newRow = previousRow + 1;
-                        break;
+                    	std::cout << " - Se desea mover hacia la derecha";
+                        newColumn = previousColumn + 1;
+                        newRow = previousRow;
+                    	break;
                     default:    // Default
                         break;
                 }
+                std::cout << " desde ("<< previousColumn <<"|"<< previousRow << ") --> (" << newColumn <<"|"<< newRow<<")."<<endl;
 
-                // Verifica que la nueva celda este dentro del tablero. Sino lo esta, pregunta de nuevo.
-                if (newRow>=0 && newRow<rows && newColumn>=0 && newColumn<columns){
-                    movedInsideBoard=true;
+                // Verifica que la nueva celda este dentro del tablero y vacia. Sino lo esta, pregunta de nuevo.
+                if (newRow>=0 && newRow<rows && newColumn>=0 && newColumn<columns
+                		&& matrix[newColumn][newRow] == emptyFieldValue){
+                	std::cout << "   Se movio el cofre hacia "<< "(" << newColumn <<"|"<< newRow<<")."<< endl;
+                	matrix[previousColumn][previousRow] = emptyFieldValue;
+                	movedInsideBoard=true;
+                } else {
+                	std::cout << "   Esa posicion esta ocupada o fuera del tablero.\n"<< endl;
                 }
             }
 
@@ -156,8 +168,7 @@ void Board::placeChest(bool replacing, int previousColumn, int previousRow){
         else{
             // Si la celda tiene un cofre del otro jugador
             if (matrix[newColumn][newRow] == -chestFieldValue){
-                matrix[newColumn][newRow] = multipleChestFieldValue; // Asigna el valor para "Cofres dobles"
-                alocatedChest=true;
+            	std::cout << "   - La celda tiene un cofre del enemigo. Prueba en otro lado"<<endl;
             }
             else {
                 // Si se trata de colocar un tesoro en una celda con espia enemigo
@@ -249,12 +260,11 @@ void Board::exportBoard() {
     masterFile    = fopen("boards/ResultadoMaestros.csv", "w");
     playerOneFile = fopen("boards/Resultado1.csv",        "w");
     playerTwoFile = fopen("boards/Resultado2.csv",        "w");
-    //TODO: std::cout << "(Debug: Punto previo al error de exportacion)"<< endl;
+    /*TODO: Por algun motivo dejo de exportar los tableros cuando pase de CLion a Eclipse
+    std::cout << "(Debug: Punto previo al error de exportacion)"<< endl;
 
-    /*//TODO: Por algun motivo dejo de exportar los tableros cuando pase de CLion a Eclipse
+
     for (int row = 0; row < rows; row++){
-        // TODO: Revisar que pasa cuando exporta casilla doble
-
     	for (int column = 0; column < columns; column++){
 
         	// Imprime toda la info
@@ -290,7 +300,7 @@ void Board::exportBoard() {
     fclose(playerOneFile);
     fclose(playerTwoFile);
     */
-    //TODO: std::cout << "(Debug: La funcion de guardado de tablero fue removida, ver comentario de la funcion)" << endl;
+    std::cout << "(Debug: La funcion de guardado de tablero fue removida, ver comentario de la funcion)" << endl;
 }
 
 
@@ -330,9 +340,11 @@ void Board::placeTheSpy(){
         // Vacio -> Patrullo.
         if (matrix[column][row] == emptyFieldValue){
 			std::cout << "       - Aca no hay nada, me quedo patruyando."<< endl;
+
 			// Asigno al espia a la celda
 			matrix[column][row] = spyFieldValue * curentPlayer;
 			spyPlaced=true;
+			printBoard();
         } else {
 			// Hay otro espia -> Nos matamos
 			if (matrix[column][row] == spyFieldValue* -curentPlayer){ // Si, nos matamos.
@@ -349,6 +361,7 @@ void Board::placeTheSpy(){
 					// Empiezo a cavar
 					digForTreasure(column,row);
 					spyPlaced=true;
+					printBoard();
 				} else {
 
 					// Hay tesoro propio -> Muevo mi tesoro y me coloco.
@@ -365,17 +378,13 @@ void Board::placeTheSpy(){
 			}
         }
         // ----------------------------------------------------
-
 		// Sino movi mi tesoro al colocar mi espia, lo hago ahora.
 		if (!chestMoved){
-	        std::cout << " - Hora de mover uno de tus tesoros"<< endl;
-			myCoordinate.askForCoordinate(columns,rows);
-			int chestColumn = myCoordinate.vertical;
-			int chestRow    = myCoordinate.horizontal;
-			moveChest(chestColumn,chestRow);
+	        std::cout << " - Hora de mover uno de tus tesoros."<< endl;
+			moveChest(column,row);
 			chestMoved = true;
 		}
-		std::cout << "Fin de espia"<< endl;
+
     }
 
     // Muestra el tablero si estamos en modo debug
@@ -385,45 +394,42 @@ void Board::placeTheSpy(){
 }
 
 void Board::removeChest(int column, int row){
-    // Hay mas de un tesoro?
-    if (matrix[column][row] == multipleChestFieldValue){
-        // Si, hay mas de un tesoro...
-        matrix[column][row] = chestFieldValue * -curentPlayer; // ...dejo el del rival
-    } else {
-        // No, esta el mio...
-        if (matrix[column][row] == chestFieldValue * curentPlayer){
-            matrix[column][row] = spyFieldValue; // ...me quedo en la casilla de donde saque el tesoro.
-        }
-    }
-    std::cout << " - Se saco el tesoro de la casilla "<< column <<"." << row << "\n";
+    matrix[column][row] = emptyFieldValue;
 }
 
 void Board::moveChest(int column, int row){
-    // TODO: IMPORTANTE: Los cofres deberian poder moverse solamente a celdas adyacentes,
-    // para ello se debera comparar los valores de la columna y la fila y ver que la diferencia con la
-    // posicion sea de 1. Por el momento se lo dejara con posicionamiento libre.
+	// Esta funcion solo se activa tras colocar un espia.
 
-    std::cout << "Moviendo el tesoro que estaba en "<< column <<"|" << row << "...\n";
+	// Si se habia colocado un espia sobre un cofre, moveremos (lo borramos y colocamos otro)
+	if (matrix[column][row] == chestFieldValue * curentPlayer){
+		std::cout << "Moviendo el tesoro que estaba en "<< column <<"|" << row << endl;
 
-    // Saca el cofre de la posicion que estaba y lo remplaza por el espia.
-    removeChest(column,row);
+		// Saca el cofre de la posicion que estaba y lo remplaza por el espia.
+		removeChest(column,row);
 
-    std::cout << "Hacia donde lo memovemos? "<< column <<"|" << row << "...\n";
+		// Solicita que ingreses las nuevas coordenas del cofre.
+		std::cout << "Hacia donde lo memovemos? "<< column <<"|" << row << endl;
+		placeChest();
 
-
-
-
-
-
-
-
-
-
-    // Solicita que ingreses las nuevas coordenas del cofre.
-    placeChest();
-    //TODO: El place debe verificar que no se lo coloque sobre un espia,si es asi, el espia cava.
-
-    // Regresa el tablero
+	} else {
+		// Si esta funcion se activo luego de que se halla colocado un espia en casillero vacio, se pedira que elijamos un cofre
+		std::cout << " - Que tesoro movemos? "<< endl;
+		// Solicita la coordenada y verifica que contenga un cofre propio
+		Coordinate myCoordinate;
+		bool cordinateAccepted = false;
+		while (!cordinateAccepted){
+			myCoordinate.askForCoordinate(columns,rows);
+			column = myCoordinate.vertical;
+			row    = myCoordinate.horizontal;
+			if (matrix[column][row] == chestFieldValue * curentPlayer){
+				std::cout << "Moviendo el tesoro que estaba en "<< column <<"|" << row << endl;
+				cordinateAccepted=true;
+			} else {
+				std::cout << "   - No tenemos un tesoro ahi. Prueba de nuevo"<< endl;
+			}
+		}
+		placeChest(true,column,row);
+	}
 }
 
 void Board::digForTreasure (int column, int row){

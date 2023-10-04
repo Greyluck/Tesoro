@@ -19,6 +19,7 @@ void Coordinate::askForCoordinate(int maxColums,int maxRows){
                 horizontal = inputH;
                 vertical = inputV;
                 acceptedCoordinate = true;
+                std::cout << "     (Cordenada valida)" << endl;
             } else {
                 std::cout << "  - Fila fuera del tablero, intente de nuevo \n";
             }
