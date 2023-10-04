@@ -4,12 +4,18 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
+../src/Board.cpp \
+../src/Coordinate.cpp \
 ../src/Tesoro.cpp 
 
 OBJS += \
+./src/Board.o \
+./src/Coordinate.o \
 ./src/Tesoro.o 
 
 CPP_DEPS += \
+./src/Board.d \
+./src/Coordinate.d \
 ./src/Tesoro.d 
 
 
