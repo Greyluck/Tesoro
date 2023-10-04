@@ -72,19 +72,22 @@ void Board::createMatrix(){
 void Board::placeChest(){
     // Sino recibe argumentos, setea los defaults y llama al metodo completo.
     bool replacing = false;
-    int previousColumn = -1; // Value out of board
-    int previousRow = -1;    // Value out of board
-    placeChest(replacing, previousColumn, previousRow);
+    int previousColumn, previousRow;
+    previousColumn = -1;    // Value out of board
+	previousRow    = -1;    // Value out of board
+	placeChest(replacing, previousColumn, previousRow);
+
 }
 
 void Board::placeChest(bool replacing, int previousColumn, int previousRow){
     // Debug para ver el tablero.
-    if (debug){
+
+	if (debug){
         printBoard();
     }
 
     // Indico el inicio de su turno
-    std::cout << "Turno de " << curentPlayerName << ".\n";
+    std::cout << "Turno de " << curentPlayerName << "." << endl;
 
     // Crea las variables para las nuevas coordenadas del tesoro.
     int newColumn;
@@ -101,8 +104,8 @@ void Board::placeChest(bool replacing, int previousColumn, int previousRow){
             bool movedInsideBoard = false;
             while (!movedInsideBoard){
                 // Consulta la nueva cordenada basada en la anterior
-                std::cout << " - Hacia donde movera el tesoro el jugador\n"<< curentPlayerName;
-                std::cout << "   (1) Arriba (2) Abajo (3) Izquierda (4) Derecha:\n";
+                std::cout << " - Hacia donde movera el tesoro el jugador" << curentPlayerName <<endl;
+                std::cout << "   (1) Arriba (2) Abajo (3) Izquierda (4) Derecha:"<<endl;
                 std::cin >> direction;
                 switch (direction) {
                     case 1:     // Arriba
@@ -134,13 +137,13 @@ void Board::placeChest(bool replacing, int previousColumn, int previousRow){
 
         } else {
             // Consulta de cordenada pidiendole a la usuario que la ingrese
-            std::cout << " - Donde colocara el tesoro jugador "<< curentPlayerName <<"?:\n";
+            std::cout << " - Donde colocara el tesoro jugador "<< curentPlayerName <<"?:"<<endl;
             Coordinate myCoordinate;
             myCoordinate.askForCoordinate(columns,rows);
             newColumn = myCoordinate.vertical;
             newRow    = myCoordinate.horizontal;
         }
-        std::cout << "    - Coordenada definada en " << newColumn << "|" <<newRow<<":\n";
+        std::cout << "    - Coordenada definada en " << newColumn << "|" <<newRow<<":"<<endl;
 
         // ----------------------------------------------------
 
@@ -158,27 +161,25 @@ void Board::placeChest(bool replacing, int previousColumn, int previousRow){
             else {
                 // Si se trata de colocar un tesoro en una celda con espia enemigo
                 if (matrix[newColumn][newRow] == -spyFieldValue){
-                    std::cout << "   - La celda tiene un espia enemigo. Prueba en otro lado"<<"\n";
+                    std::cout << "   - La celda tiene un espia enemigo. Prueba en otro lado"<<endl;
                     placeChest();
                 } else {
                     // Si se trata de colocar un tesoro en una celda con un tesoro o espia propio
-                    std::cout << "   - La celda esta ocupada, intenta con otra."<<"\n\n";
+                    std::cout << "   - La celda esta ocupada, intenta con otra."<<"\n"<<endl;
                 }
             }
         }
     }
     // Si la celda era correcta:
-    std::cout << " - Tesoro enterrado en columna "<< newColumn <<" fila " << newRow << "\n\n";
+    std::cout << " - Tesoro enterrado en columna "<< newColumn <<" fila " << newRow << "\n"<<endl;
 }
 
 void Board::placeInitialChests() {
-
     // Por cada cofre inicial ejecuto la colocacion del mismo por turnos.
     for (int chest = 1; chest <= chestQuantity * 2; chest++) {
-
-        std::cout << "----------------------------------------------------------------\n";
-        std::cout << "                    Colocando tesoros iniciales.\n";
-        std::cout << "----------------------------------------------------------------\n";
+        std::cout << "----------------------------------------------------------------"<<endl;
+        std::cout << "                    Colocando tesoros iniciales."<<endl;
+        std::cout << "----------------------------------------------------------------"<<endl;
 
         // Coloco un cofre
         placeChest();
@@ -191,7 +192,7 @@ void Board::placeInitialChests() {
 
 void Board::printBoard(){
     if (debug){
-        printf("                       TABLERO DE JUEGO: \n");
+    	std::cout << "                       TABLERO DE JUEGO:"<< endl;
 
         // Lo que se agregue en esta seccion se imprimie una sola vez
         std::cout << "  |";
@@ -234,7 +235,6 @@ void Board::printBoard(){
         }
         std::cout <<endl;
     }
-
     // Exporta los tableros
     exportBoard();
 }
@@ -245,14 +245,19 @@ void Board::exportBoard() {
     FILE *playerOneFile;
     FILE *playerTwoFile;
 
-    masterFile    = fopen("../Boards/ResultadoMaestros.csv", "w");
-    playerOneFile = fopen("../Boards/Resultado1.csv",        "w");
-    playerTwoFile = fopen("../Boards/Resultado2.csv",        "w");
+    masterFile    = fopen("boards/ResultadoMaestros.csv", "w");
+    playerOneFile = fopen("boards/Resultado1.csv",        "w");
+    playerTwoFile = fopen("boards/Resultado2.csv",        "w");
+    std::cout << "(Debug: Punto previo al error de exportacion)"<< endl;
 
+    /*//TODO: Por algun motivo dejo de exportar los tableros cuando pase de CLion a Eclipse
     for (int row = 0; row < rows; row++){
         // TODO: Revisar que pasa cuando exporta casilla doble
-        for (int column = 0; column < columns; column++){
-            // Imprime toda la info
+
+    	for (int column = 0; column < columns; column++){
+
+        	// Imprime toda la info
+
             fprintf(masterFile, "|%i", matrix[column][row]);
 
             // Imprime la info que el jugador 1 puede ver.
@@ -272,18 +277,19 @@ void Board::exportBoard() {
                 } else {
                     fprintf(playerTwoFile, "|%i", matrix[column][row]);
                 }
-
             }
-
         }
         fprintf(masterFile, "|\n");
         fprintf(playerOneFile, "|\n");
         fprintf(playerTwoFile, "|\n");
     }
+
     //--------------------------------------------------------
     fclose(masterFile);
     fclose(playerOneFile);
     fclose(playerTwoFile);
+    */
+    std::cout << "(Debug: La funcion de guardado de tablero fue removida, ver comentario de la funcion)" << endl;
 }
 
 
@@ -310,7 +316,7 @@ void Board::placeTheSpy(){
 
     while (!spyPlaced){
         // Consulta de cordenada ------------------------------
-        std::cout << " - Donde colocara el espia el jugador "<< curentPlayerName<<"?\n";
+        std::cout << " - Donde colocara el espia el jugador "<< curentPlayerName<<"?"<< endl;
         Coordinate myCoordinate;
         myCoordinate.askForCoordinate(columns,rows);
         int column = myCoordinate.vertical;
@@ -456,7 +462,7 @@ void Board::updateBoard(){
         victory = true;
     } else {
         if (playerTwoRemainingChests <= 0) {
-            std::cout << "Gano el jugador " << curentPlayerName << ".\n";
+            std::cout << "Gano el jugador " << curentPlayerName << "." << endl;
             victory = true;
         }
     }
