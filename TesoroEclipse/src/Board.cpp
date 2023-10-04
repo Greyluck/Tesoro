@@ -87,7 +87,8 @@ void Board::placeChest(bool replacing, int previousColumn, int previousRow){
     }
 
     // Indico el inicio de su turno
-    std::cout << "Turno de " << curentPlayerName << "." << endl;
+	std::cout << "--------------------------------------------------- " << endl;
+	std::cout << "Turno de " << curentPlayerName << "." << endl;
 
     // Crea las variables para las nuevas coordenadas del tesoro.
     int newColumn;
@@ -248,7 +249,7 @@ void Board::exportBoard() {
     masterFile    = fopen("boards/ResultadoMaestros.csv", "w");
     playerOneFile = fopen("boards/Resultado1.csv",        "w");
     playerTwoFile = fopen("boards/Resultado2.csv",        "w");
-    std::cout << "(Debug: Punto previo al error de exportacion)"<< endl;
+    //TODO: std::cout << "(Debug: Punto previo al error de exportacion)"<< endl;
 
     /*//TODO: Por algun motivo dejo de exportar los tableros cuando pase de CLion a Eclipse
     for (int row = 0; row < rows; row++){
@@ -289,15 +290,15 @@ void Board::exportBoard() {
     fclose(playerOneFile);
     fclose(playerTwoFile);
     */
-    std::cout << "(Debug: La funcion de guardado de tablero fue removida, ver comentario de la funcion)" << endl;
+    //TODO: std::cout << "(Debug: La funcion de guardado de tablero fue removida, ver comentario de la funcion)" << endl;
 }
 
 
 void Board::playTheTurn(){
-    std::cout << "----------------------------------------------------------------\n";
-    std::cout << "                    Comenzando el juego.\n";
-    std::cout << "----------------------------------------------------------------\n";
-    std::cout << "Turno del jugador "<< curentPlayerName <<"\n";
+    std::cout << "----------------------------------------------------------------"<< endl;
+    std::cout << "                    Comenzando el juego."<< endl;
+    std::cout << "----------------------------------------------------------------"<< endl;
+    std::cout << "Turno del jugador "<< curentPlayerName << endl;
     if (debug){
         printBoard();
     }
@@ -321,62 +322,60 @@ void Board::placeTheSpy(){
         myCoordinate.askForCoordinate(columns,rows);
         int column = myCoordinate.vertical;
         int row    = myCoordinate.horizontal;
-        std::cout << "   - El espia intentara ubicarse en:\n";
-        std::cout << "      columna "<< column <<" fila " << row << "\n";
+        std::cout << "   - El espia intentara ubicarse en:"<< endl;
+        std::cout << "      columna "<< column <<" fila " << row << endl;
         // ----------------------------------------------------
         
-        // Habia tesoros?
-        if ( matrix[column][row] == chestFieldValue* curentPlayer
-             || matrix[column][row] == chestFieldValue* -curentPlayer
-             || matrix[column][row] == multipleChestFieldValue){
-            std::cout << "       - El espia encontro un tesoro...";
-            spyPlaced=true;
+        // Logica de que pasa cuando elijo donde colocar mi espia ------------------------------
+        // Vacio -> Patrullo.
+        if (matrix[column][row] == emptyFieldValue){
+			std::cout << "       - Aca no hay nada, me quedo patruyando."<< endl;
+			// Asigno al espia a la celda
+			matrix[column][row] = spyFieldValue * curentPlayer;
+			spyPlaced=true;
+        } else {
+			// Hay otro espia -> Nos matamos
+			if (matrix[column][row] == spyFieldValue* -curentPlayer){ // Si, nos matamos.
+			   std::cout << "       - Hay otro espia! Ambos mueren."<< endl;
+			   // Vacio la celda
+			   matrix[column][row]=emptyFieldValue;
+			   printBoard();
+			   spyPlaced=true;
+			} else {
 
-            if(matrix[column][row] == chestFieldValue* curentPlayer){
-                std::cout << " pero era nuestro. Necesitamos moverlo.\n\n";
-                moveChest(column,row);     // Debo mover mi tesoro.
-                chestMoved = true;
-                spyPlaced=true;
-            }
+				// Hay tesoro enemigo -> Desentierro
+				if ( matrix[column][row] == chestFieldValue * -curentPlayer){
+					std::cout << "       - Hay un tesoro rival!, empezando a cavar."<< endl;
+					// Empiezo a cavar
+					digForTreasure(column,row);
+					spyPlaced=true;
+				} else {
 
-            if(matrix[column][row] == chestFieldValue* -curentPlayer){
-                std::cout << " y es del rival! Esta a extrayendo el tesoro!\n\n";
-                digForTreasure(column,row);     // Empezamos a cavar
-                spyPlaced=true;
-            }
-
-            if(matrix[column][row] == multipleChestFieldValue){
-                std::cout << " de echo hay varios.";
-                std::cout << "... Necesitamos mover el nuestro.\n";
-                moveChest(column,row);          // Debo mover mi tesoro...
-                digForTreasure(column,row);     // ... y empezar a cavar
-                chestMoved = true;
-                spyPlaced = true;
-
-                std::cout << "... ya podemos empezar a cavar\n";
-                digForTreasure(column,row);     // Empezamos a cavar
-            }
-        } else { // NO HABIA TESOROS
-            // Hay otro espia?
-            if (matrix[column][row] == spyFieldValue* -curentPlayer){ // Si, nos matamos.
-                std::cout << "       - Hay otro espia! Ambos mueren.\n";
-                matrix[column][row]=emptyFieldValue;
-                printBoard();
-                spyPlaced=true;
-            }
-
-            if (matrix[column][row] == spyFieldValue* curentPlayer){ // Si, pero es nuestro.
-                std::cout << "       - Hay otro espia... pero es nuestro, me voy a otro lado.\n";
-                //NOTA: ACA NO LLEVA "spyPlaced=true;"
-            }
-
-            else {
-                std::cout << "       - Aca no hay nada, me quedo patruyando.\n";
-                matrix[column][row] = spyFieldValue * curentPlayer;
-                spyPlaced=true;
-            }
+					// Hay tesoro propio -> Muevo mi tesoro y me coloco.
+					if(matrix[column][row] == chestFieldValue* curentPlayer){
+						std::cout << "       - Hay un tesoro propio, necesitamos moverlo."<< endl;
+						// Debo mover mi tesoro.
+						moveChest(column,row);
+						chestMoved = true;
+						// Asigno al espia a la celda
+						matrix[column][row] = spyFieldValue * curentPlayer;;
+						spyPlaced=true;
+					}
+				}
+			}
         }
-    //TODO: Agregar que pasa sino movi el tesoro este turno (Ver version previa).
+        // ----------------------------------------------------
+
+		// Sino movi mi tesoro al colocar mi espia, lo hago ahora.
+		if (!chestMoved){
+	        std::cout << " - Hora de mover uno de tus tesoros"<< endl;
+			myCoordinate.askForCoordinate(columns,rows);
+			int chestColumn = myCoordinate.vertical;
+			int chestRow    = myCoordinate.horizontal;
+			moveChest(chestColumn,chestRow);
+			chestMoved = true;
+		}
+		std::cout << "Fin de espia"<< endl;
     }
 
     // Muestra el tablero si estamos en modo debug
