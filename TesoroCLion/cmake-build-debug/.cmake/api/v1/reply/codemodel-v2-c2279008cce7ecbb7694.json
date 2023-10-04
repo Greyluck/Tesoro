@@ -49,8 +49,8 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "F:/Principal/Proyectos Git/Tesoro/cmake-build-debug",
-		"source" : "F:/Principal/Proyectos Git/Tesoro"
+		"build" : "F:/Principal/Proyectos Git/Tesoro/TesoroCLion/cmake-build-debug",
+		"source" : "F:/Principal/Proyectos Git/Tesoro/TesoroCLion"
 	},
 	"version" : 
 	{

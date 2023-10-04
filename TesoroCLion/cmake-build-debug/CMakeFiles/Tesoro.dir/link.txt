@@ -1,0 +1,3 @@
+"C:\Users\Usuario\AppData\Local\JetBrains\CLion 2023.2.1\bin\cmake\win\x64\bin\cmake.exe" -E rm -f CMakeFiles\Tesoro.dir/objects.a
+C:\Users\Usuario\AppData\Local\JETBRA~1\CLION2~1.1\bin\mingw\bin\ar.exe qc CMakeFiles\Tesoro.dir/objects.a @CMakeFiles\Tesoro.dir\objects1.rsp
+C:\Users\Usuario\AppData\Local\JETBRA~1\CLION2~1.1\bin\mingw\bin\G__~1.EXE -g -Wl,--whole-archive CMakeFiles\Tesoro.dir/objects.a -Wl,--no-whole-archive -o Tesoro.exe -Wl,--out-implib,libTesoro.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\Tesoro.dir\linkLibs.rsp

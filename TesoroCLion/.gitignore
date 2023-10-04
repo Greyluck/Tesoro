@@ -1,0 +1,42 @@
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+Boards/*
+cmake-build-debug/Testing/Temporary/LastTest.log
+cmake-build-debug/.ninja_deps
+cmake-build-debug/.ninja_log
+cmake-build-debug/Testing/Temporary/*
+*.log
+cmake-build-debug/Testing/Temporary/LastTest.log
+cmake-build-debug/.ninja_log
+cmake-build-debug/.ninja_deps
+cmake-build-debug/Testing/Temporary/LastTest.log
